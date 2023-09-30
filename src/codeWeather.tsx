@@ -1,0 +1,116 @@
+import React from "react";
+import ReactAnimatedWeather from "react-animated-weather";
+
+type Props = {
+  codeIcon: string;
+};
+
+const codeWeather: React.FC<Props> = ({ codeIcon }) => {
+  const codeMapping: { [key: string]: string } = {
+    "0": "Unknown",
+    "1000": "CLEAR_DAY",
+    "1100": "CLEAR_DAY",
+    "1101": "PARTLY_CLOUDY_DAY",
+    "1102": "CLOUDY",
+    "1001": "CLOUDY",
+    "1103": "PARTLY_CLOUDY_DAY",
+    "2100": "FOG",
+    "2101": "CLEAR_DAY",
+    "2102": "PARTLY_CLOUDY_DAY",
+    "2103": "FOG",
+    "2106": "CLEAR_DAY",
+    "2107": "PARTLY_CLOUDY_DAY",
+    "2108": "FOG",
+    "2000": "FOG",
+    "4204": "PARTLY_CLOUDY_DAY",
+    "4203": "CLEAR_DAY",
+    "4205": "CLOUDY",
+    "4000": "RAIN",
+    "4200": "RAIN",
+    "4213": "CLEAR_DAY",
+    "4214": "PARTLY_CLOUDY_DAY",
+    "4215": "CLOUDY",
+    "4209": "CLEAR_DAY",
+    "4208": "PARTLY_CLOUDY_DAY",
+    "4210": "RAIN",
+    "4001": "RAIN",
+    "4211": "CLEAR_DAY",
+    "4202": "PARTLY_CLOUDY_DAY",
+    "4212": "RAIN",
+    "4201": "RAIN",
+    "5115": "CLEAR_DAY",
+    "5116": "PARTLY_CLOUDY_DAY",
+    "5117": "WIND",
+    "5001": "Flurries",
+    "5100": "SNOW",
+    "5102": "CLEAR_DAY",
+    "5103": "PARTLY_CLOUDY_DAY",
+    "5104": "CLOUDY",
+    "5122": "SNOW",
+    "5105": "CLEAR_DAY",
+    "5106": "PARTLY_CLOUDY_DAY",
+    "5107": "CLOUDY",
+    "5000": "SNOW",
+    "5101": "SNOW",
+    "5119": "CLEAR_DAY",
+    "5120": "PARTLY_CLOUDY_DAY",
+    "5121": "CLOUDY",
+    "5110": "SNOW",
+    "5108": "RAIN",
+    "5114": "SNOW",
+    "5112": "SNOW",
+    "6000": "Freezing Drizzle",
+    "6003": "CLEAR_DAY",
+    "6002": "PARTLY_CLOUDY_DAY",
+    "6004": "CLOUDY",
+    "6204": "RAIN",
+    "6206": "RAIN",
+    "6205": "CLEAR_DAY",
+    "6203": "PARTLY_CLOUDY_DAY",
+    "6209": "CLOUDY",
+    "6200": "RAIN",
+    "6213": "CLEAR_DAY",
+    "6214": "PARTLY_CLOUDY_DAY",
+    "6215": "CLOUDY",
+    "6001": "RAIN",
+    "6212": "RAIN",
+    "6220": "RAIN",
+    "6222": "RAIN",
+    "6207": "CLEAR_DAY",
+    "6202": "PARTLY_CLOUDY_DAY",
+    "6208": "CLOUDY",
+    "6201": "RAIN",
+    "7110": "CLEAR_DAY",
+    "7111": "PARTLY_CLOUDY_DAY",
+    "7112": "CLOUDY",
+    "7102": "SLEET",
+    "7108": "CLEAR_DAY",
+    "7107": "PARTLY_CLOUDY_DAY",
+    "7109": "CLOUDY",
+    "7000": "SNOW",
+    "7105": "SNOW",
+    "7106": "RAIN",
+    "7115": "RAIN",
+    "7117": "RAIN",
+    "7103": "SLEET",
+    "7113": "CLEAR_DAY",
+    "7114": "PARTLY_CLOUDY_DAY",
+    "7116": "CLOUDY",
+    "7101": "SNOW",
+    "8001": "CLEAR_DAY",
+    "8003": "PARTLY_CLOUDY_DAY",
+    "8002": "CLOUDY",
+    "8000": "RAIN",
+  };
+
+  return (
+    <ReactAnimatedWeather
+      icon={codeMapping[codeIcon]}
+      color="goldenrod"
+      size="60"
+      animate={true}
+    />
+  );
+};
+
+export default codeWeather;
