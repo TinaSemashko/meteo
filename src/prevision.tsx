@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import { ForecastDataRaw } from "./types";
-import CodeWeather from "./codeWeather";
+import CodeWeather from "./getIcon";
+import { weatherCodeDay } from "./codeWeather";
 
 import * as S from "./prevision.styled";
 
@@ -19,22 +20,19 @@ const Prevision: React.FC<ForecastDataRaw> = ({ values, time }) => {
           }
         />
         <Typography variant="body1">
-          temperature: {values?.temperatureAvg};
+          {weatherCodeDay(values?.weatherCodeMax ? values?.weatherCodeMax : 0)}
         </Typography>
         <Typography variant="body1">
-          humidity: {values?.humidityAvg};
+          temperature: {Math.round(values?.temperatureAvg)}°C;
         </Typography>
         <Typography variant="body1">
-          precipitation probability: {values?.precipitationProbabilityAvg};
+          humidity: {Math.round(values?.humidityAvg)}% ;
         </Typography>
         <Typography variant="body1">
-          pressure surface: {values?.pressureSurfaceLevelAvg};
+          pressure surface: {values?.pressureSurfaceLevelAvg}mm;
         </Typography>
         <Typography variant="body1">
-          wind speed: {values?.windSpeedAvg};
-        </Typography>
-        <Typography variant="body1">
-          visibilit: {values?.visibilityAvg};
+          wind speed: {values?.windSpeedAvg}km/h;
         </Typography>
       </S.ContainerWeather>
     </S.MainContainer>

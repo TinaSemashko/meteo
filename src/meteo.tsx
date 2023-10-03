@@ -1,11 +1,19 @@
-import { InputAdornment, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { APIKey } from "./config";
 import axios from "axios";
 import Prevision from "./prevision";
 import { MeteoData, ForecastDataRaw } from "./types";
-import CodeWeather from "./codeWeather";
+import CodeWeather from "./getIcon";
+import { Errors } from "./errors";
+import { weatherCode } from "./codeWeather";
 
 import * as S from "./meteo.styled";
 
@@ -13,6 +21,9 @@ const Meteo: React.FC = () => {
   const [searchCity, setSearchCity] = useState("Paris");
   const [weatherData, setWeatherData] = useState<MeteoData>();
   const [forecastData, setForecastData] = useState<ForecastDataRaw[]>([]);
+  const [isError, setIsError] = useState(false);
+  const [errorStatus, setErrorStatus] = useState("");
+  const [errorMessage, setIsErrorMessage] = useState("");
 
   const APIUrl = `https://api.tomorrow.io/v4/weather/realtime?location=${searchCity}&apikey=${APIKey}`;
   const APIUrlForecast = `https://api.tomorrow.io/v4/weather/forecast?location=${searchCity}&timesteps=daily&apikey=${APIKey}`;
@@ -23,6 +34,12 @@ const Meteo: React.FC = () => {
     setSearchCity(event.target.value);
   };
 
+  const showError = (status: number, message: string) => {
+    setIsError(true);
+    setErrorStatus(Errors(status));
+    setIsErrorMessage(message);
+  };
+
   useEffect(() => {
     const fetchGet = async () => {
       await axios
@@ -31,11 +48,11 @@ const Meteo: React.FC = () => {
           setWeatherData(response.data.data.values as MeteoData);
         })
         .catch((err) => {
-          console.error(err);
+          showError(err.response.status, err.response.data.status_message);
         });
     };
-    fetchGet();
-  }, [searchCity]);
+    // fetchGet();
+  }, [searchCity, APIUrl]);
 
   useEffect(() => {
     const fetchGet = async () => {
@@ -45,11 +62,11 @@ const Meteo: React.FC = () => {
           setForecastData(response.data.timelines.daily as ForecastDataRaw[]);
         })
         .catch((err) => {
-          console.error(err);
+          showError(err.response.status, err.response.data.status_message);
         });
     };
-    fetchGet();
-  }, [searchCity]);
+    //fetchGet();
+  }, [searchCity, APIUrlForecast]);
 
   return (
     <S.MainContainer>
@@ -62,7 +79,7 @@ const Meteo: React.FC = () => {
         label="Search"
         value={searchCity}
         onChange={handleChange}
-        sx={{ width: 600 }}
+        sx={{ width: "50vw" }}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -75,31 +92,38 @@ const Meteo: React.FC = () => {
         {searchCity}
       </Typography>
       <S.ContainerWeather>
-        <CodeWeather
-          codeIcon={
-            weatherData?.weatherCode === undefined
-              ? "0"
-              : weatherData?.weatherCode.toString()
-          }
-        />
+        <S.Title>
+          <CodeWeather
+            codeIcon={
+              weatherData?.weatherCode === undefined
+                ? "0"
+                : weatherData?.weatherCode.toString()
+            }
+          />
+          <Typography variant="h6" color="gold" sx={{ textAlign: "center" }}>
+            {weatherCode(
+              weatherData?.weatherCode ? weatherData?.weatherCode : 0
+            )}
+          </Typography>
+        </S.Title>
         <S.Day>
           <Typography variant="h6" color="secondary">
-            temperature: {weatherData?.temperature}
+            temperature:
+            {Math.round(
+              weatherData?.temperature ? weatherData?.temperature : 0
+            )}
+            °C
+          </Typography>
+
+          <Typography variant="h6" color="secondary">
+            humidity:
+            {Math.round(weatherData?.humidity ? weatherData?.humidity : 0)}%
           </Typography>
           <Typography variant="h6" color="secondary">
-            cloud: {weatherData?.cloudBase};
+            pressure:{weatherData?.pressureSurfaceLevel}mm
           </Typography>
           <Typography variant="h6" color="secondary">
-            humidity: {weatherData?.humidity}
-          </Typography>
-          <Typography variant="h6" color="secondary">
-            visibility: {weatherData?.visibility}
-          </Typography>
-          <Typography variant="h6" color="secondary">
-            pressure:{weatherData?.pressureSurfaceLevel}
-          </Typography>
-          <Typography variant="h6" color="secondary">
-            wind speed:{weatherData?.windSpeed}
+            wind speed:{weatherData?.windSpeed}km/h
           </Typography>
         </S.Day>
         {forecastData
@@ -109,6 +133,17 @@ const Meteo: React.FC = () => {
               <Prevision values={item.values} time={item.time} />;
             </div>
           ))}
+        {isError ? (
+          <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            <Typography variant="h6" color="red">
+              Status: {errorStatus}
+            </Typography>
+            <Typography variant="h6">{errorMessage}</Typography>
+          </Alert>
+        ) : (
+          ""
+        )}
       </S.ContainerWeather>
       <footer>
         <p className="text-center mt-5">
@@ -116,7 +151,7 @@ const Meteo: React.FC = () => {
             This website was coded by Tina Semashko, and is&nbsp;
             <a
               href="https://github.com/TinaSemashko/meteo"
-              target="_blank"
+              rel="noreferrer"
               title="github link that project"
             >
               open-sourced
