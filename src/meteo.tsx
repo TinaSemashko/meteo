@@ -51,7 +51,7 @@ const Meteo: React.FC = () => {
           showError(err.response.status, err.response.data.status_message);
         });
     };
-    // fetchGet();
+    fetchGet();
   }, [searchCity, APIUrl]);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ const Meteo: React.FC = () => {
           showError(err.response.status, err.response.data.status_message);
         });
     };
-    //fetchGet();
+    fetchGet();
   }, [searchCity, APIUrlForecast]);
 
   return (
